@@ -14,6 +14,22 @@ class Screen:
     def handle_event(self, event, game):
         pass
 
+class GameScreen(Screen):
+    def __init__(self, *args, **kwargs):
+        self.surface = Surface.GameSurface(
+            (640, 480),
+            (0, 0),
+            Surface.ScreenSurface((0, 0))
+        )
+        self.surface.connect_screen(self)
+
+        super().__init__(*args, **kwargs)
+
+    def handle_event(self, event, game):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                self.game.set_screen("main_menu")
+
 class MainMenuScreen(Screen):
     menu_active = 0
     menu_rows = ["New Game", "Load Game", "Leaderboard", "Exit"]
@@ -25,7 +41,6 @@ class MainMenuScreen(Screen):
             (0, 0),
             Surface.ScreenSurface((0, 0))
         )
-        # self.surface = Surface.ScreenSurface((0, 0))
         self.surface.connect_screen(self)
 
         super().__init__(*args, **kwargs)
@@ -42,7 +57,7 @@ class MainMenuScreen(Screen):
             
             if event.key == pygame.K_RETURN:
                 if self.menu_active == 0:
-                    pass
+                    self.game.set_screen("game")
                 elif self.menu_active == 1:
                     pass
                 elif self.menu_active == 2:
