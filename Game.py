@@ -9,7 +9,9 @@ class Game:
     def __init__(self):
         self.screens = {
             "main_menu": Screen.MainMenuScreen(self),
-            "game": Screen.GameScreen(self)
+            "game": Screen.GameScreen(self),
+            "end_screen": Screen.EndScreen(self),
+            "leaderboard": Screen.LeaderboardScreen(self)
         }
         self.current = self.screens["main_menu"]
 

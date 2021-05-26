@@ -1,3 +1,4 @@
+import os.path
 import pygame
 import Surface
 
@@ -28,7 +29,50 @@ class GameScreen(Screen):
     def handle_event(self, event, game):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
-                self.game.set_screen("main_menu")
+                self.game.set_screen("end_screen")
+
+class EndScreen(Screen):
+    def __init__(self, *args, **kwargs):
+        self.surface = Surface.EndSurface(
+            (640, 480),
+            (0, 0),
+            Surface.ScreenSurface((0, 0))
+        )
+        self.surface.connect_screen(self)
+
+        super().__init__(*args, **kwargs)
+
+    def handle_event(self, event, game):
+        if event.type == pygame.KEYDOWN:
+            self.game.set_screen("leaderboard")
+
+class LeaderboardScreen(Screen):
+    def __init__(self, *args, **kwargs):
+        self.results = []
+
+        if os.path.exists('leaderboard.txt'):
+            with open('leaderboard.txt', 'r') as f:
+                for line in f:
+                    r = line.split()
+                    self.results.append({
+                        "name": r[0],
+                        "score": int(r[1])
+                    })
+
+        self.results.sort(key=lambda x: x["score"], reverse=True)
+
+        self.surface = Surface.LeaderboardSurface(
+            (640, 480),
+            (0, 0),
+            Surface.ScreenSurface((0, 0))
+        )
+        self.surface.connect_screen(self)
+
+        super().__init__(*args, **kwargs)
+
+    def handle_event(self, event, game):
+        if event.type == pygame.KEYDOWN:
+            self.game.set_screen("main_menu")
 
 class MainMenuScreen(Screen):
     menu_active = 0
@@ -61,7 +105,7 @@ class MainMenuScreen(Screen):
                 elif self.menu_active == 1:
                     pass
                 elif self.menu_active == 2:
-                    pass
+                    self.game.set_screen("leaderboard")
                 elif self.menu_active == 3:
                     self.game.quit()
 

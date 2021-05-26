@@ -40,6 +40,35 @@ class GameSurface(ScreenSurface):
         self.blit(font.render("Hello, you're in my game", False, colors["white"]), (50, 50))
         self.blit(font.render("Press any key to continue...", False, colors["white"]), (50, 75))
 
+class EndSurface(ScreenSurface):
+    def draw(self, canvas):
+        font = pygame.font.SysFont('Comic Sans MS', 30)
+        self.blit(font.render("You've Won!", False, colors["white"]), (50, 50))
+        self.blit(font.render("Press any key to continue...", False, colors["white"]), (50, 75))
+
+class LeaderboardSurface(ScreenSurface):
+    def draw(self, canvas):
+        rows = self.screen.results
+
+        if len(rows) > 0:
+            self.draw_results(canvas, rows)
+        else:
+            self.draw_empty(canvas)
+
+    def draw_results(self, canvas, results):
+        line_height = 25
+        font = pygame.font.SysFont('Comic Sans MS', line_height)
+        vertical = 50
+        for i, row in enumerate(results):
+            color = colors["white"]
+            self.blit(font.render("{0}. {1} - {2}".format(i + 1, row["name"], row["score"]), False, color), (50, vertical))
+            vertical += line_height
+
+    def draw_empty(self, canvas):
+        font = pygame.font.SysFont('Comic Sans MS', 30)
+        self.blit(font.render("Yout don't have any results yet. Play the game!", False, colors["white"]), (50, 50))
+        self.blit(font.render("Press any key to continue...", False, colors["white"]), (50, 75))
+
 class MenuSurface(ScreenSurface):
     def draw(self, canvas):
         rows = self.screen.menu_rows
